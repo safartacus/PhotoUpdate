@@ -1,13 +1,22 @@
 import express from "express";
+import dotenv from "dotenv";
+import DbConnection from "./db.js"
+import pageRoute from "./routes/pageRoute.js"
+import photoRoute from "./routes/photoRoute.js"
 
+dotenv.config();
+
+//Db connection
+DbConnection();
 const app = express();
+app.use(express.json())
 
-const port = 3000;
 
-app.get("/",(req,res)=>{
-    res.send("Application Started")
-})
+//routes
+app.use("/", pageRoute);
+app.use("/photos", photoRoute);
 
-app.listen(port, () => {
-    console.log(`Application running on port : ${port}`);
+
+app.listen(process.env.PORT, () => {
+    console.log(`Application running on port : ${process.env.PORT}`);
 });
