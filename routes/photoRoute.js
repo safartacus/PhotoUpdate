@@ -4,5 +4,7 @@ const router = express.Router();
 
 router.route("/").get(photoController.getAllPhoto);
 router.route("/addPhoto").post(photoController.createPhoto);
+router.route("/:id").get(photoController.getPhotobyId);
+
 
 export default router;

@@ -1,16 +1,14 @@
-import Photo from "../models/photoModel.js";
+import User from "../models/userModel.js";
+import bcrypt from "bcryptjs/dist/bcrypt.js";
 
-const createPhoto = async (req, res) => {
-    console.log(res.locals.user)
+const createUser = async (req, res) => {
+    console.log(req.body.passWord)
     try {
-        const photo = await Photo.create({
-            name:req.body.name,
-            description: req.body.description,
-            user:res.locals.user._id
-        });
+        req.body.passWord = await bcrypt.hash(req.body.passWord, 10);
+        const user = await User.create(req.body);
         res.status(200).json({
             succeded: true,
-            photo,
+            user,
         })
     } catch (error) {
         res.status(500).json({
@@ -19,13 +17,12 @@ const createPhoto = async (req, res) => {
         });
     }
 };
-const getAllPhoto = async (req, res) => {
-
+const getAllUsers = async (req, res) => {
     try {
-        const photos = await Photo.find();
+        const users = await User.find();
         res.status(200).json({
             succeded: true,
-            photos,
+            users,
         })
     } catch (error) {
         res.status(500).json({
@@ -34,13 +31,13 @@ const getAllPhoto = async (req, res) => {
         });
     }
 };
-const getPhotobyId = async (req, res) => {
+const getUserbyId = async (req, res) => {
 
     try {
-        const photo = await Photo.findById(req.body._id);
+        const user = await User.findById(req.body._id);
         res.status(200).json({
             succeded: true,
-            photo,
+            user,
         })
     } catch (error) {
         res.status(500).json({
@@ -49,4 +46,4 @@ const getPhotobyId = async (req, res) => {
         });
     }
 };
-export {createPhoto,getAllPhoto,getPhotobyId};
+export {createUser,getAllUsers,getUserbyId};
