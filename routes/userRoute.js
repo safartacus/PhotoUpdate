@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.route("/").get(authhMiddleWare.authenticationToken,userController.getAllUsers);
 router.route("/register").post(userController.createUser);
+router.route("/userPhotos").get(userController.getAllPhotoByUser);
 router.route("/:id").get(userController.getUserbyId);
+
 
 
 export default router;

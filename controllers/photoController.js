@@ -1,13 +1,25 @@
 import Photo from "../models/photoModel.js";
+import {v2 as cloudinary} from "cloudinary";
+import fs from 'fs';
 
 const createPhoto = async (req, res) => {
-    console.log(res.locals.user)
+
+    const result = await cloudinary.uploader.upload(req.files.image.tempFilePath,
+        {
+            use_filename: true,
+            folder: 'NodeJS'
+        }
+    );
+
     try {
         const photo = await Photo.create({
             name:req.body.name,
             description: req.body.description,
-            user:res.locals.user._id
+            user:res.locals.user._id,
+            url: result.secure_url
         });
+
+        fs.unlinkSync(req.files.tempFilePath)
         res.status(200).json({
             succeded: true,
             photo,

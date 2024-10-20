@@ -10,18 +10,20 @@ const authentication = async (req, res) => {
             res.cookie("jsonwebtoken", token ,{
                 httpOnly: true,
                 maxAge: 1000* 60* 60 *24,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'None',
             });
-            res.status(200).json({
+            return res.status(200).json({
                 user,
                 token
             });
           } 
           else {
-            res.status(401).json({ message: 'Geçersiz kimlik bilgileri' });
+            return res.status(401).json({ message: 'Geçersiz kimlik bilgileri' });
           }
     } catch (error) {
-        res.status(500).json({
-            succeded: false,
+        return res.status(500).json({
+            succeded: false, 
             error: error.message
         });
     }
