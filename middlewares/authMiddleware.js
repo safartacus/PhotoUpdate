@@ -3,26 +3,39 @@ import jwt from "jsonwebtoken";
 
 const checkUser = async (req, res, next) => {
     
+
     const token = req.cookies.jsonwebtoken;
-    if(token){
-        jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken) => {
-            if(err){
+    
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+            if (err) {
                 res.locals.user = null;
-                next();
-            }
-            else{
-                const user = await User.findById(decodedToken.id)
+                return res.status(401).json({
+                    message: 'Invalid or Expired Token',
+                    isAuth: false
+                });
+            } else {
+                const user = await User.findById(decodedToken.id);
+                if (!user) {
+                    res.locals.user = null;
+                    return res.status(401).json({
+                        message: 'User Not Found',
+                        isAuth: false
+                    });
+                }
                 res.locals.user = user;
                 next();
             }
         });
+    } else {
+        res.locals.user = null;
+        return res.status(401).json({
+            message: 'No Token Found',
+            isAuth: false
+        });
     }
-    else
-    {   
-        res.status(500).json({ message: 'No Token Found' }); 
-        next();
-    }
-}
+};
+
 const authenticationToken = async (req,res,next) =>{
     try {
         const token = req.cookies.jsonwebtoken;

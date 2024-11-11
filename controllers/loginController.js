@@ -28,4 +28,23 @@ const authentication = async (req, res) => {
         });
     }
 };
-export {authentication};
+const logout = (req, res) => {
+    try {
+        // Çerez özniteliklerini sıfırlayarak çerezi siler
+        res.clearCookie('jsonwebtoken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'None',
+        });
+        return res.status(200).json({ 
+            succeded: true,
+            message: 'Başarıyla çıkış yapıldı' });
+    } catch (error) {
+        return res.status(500).json({ 
+            succeded: false, 
+            error: error.message 
+        });
+    }
+};
+
+export {authentication,logout};
