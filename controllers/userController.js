@@ -171,9 +171,7 @@ const updateUserDetail = async (req,res) => {
             });
             profilePictureUrl = result.secure_url;
         }
-    console.log(req.body.interests)
     const interest = JSON.parse(req.body.interests);
-    console.log(interest);
     try {
         const userDetailId = req.body.userDetailId; // URL'den id'yi al
         const updateData = {
